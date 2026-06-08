@@ -1,0 +1,11 @@
+test_dates (__main__.TestAfter.test_dates)
+after() will give next date ... ok
+test_dtypes (__main__.TestAfter.test_dtypes)
+after() is returning string ... ok
+test_leap (__main__.TestAfter.test_leap)
+after() works with leap year ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+OK

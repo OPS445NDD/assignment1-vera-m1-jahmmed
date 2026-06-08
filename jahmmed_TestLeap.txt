@@ -1,0 +1,7 @@
+test_leap_func (__main__.TestLeap.test_leap_func)
+leap_year function exists and returns True/False ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
