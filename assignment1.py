@@ -77,3 +77,93 @@ if __name__ == "__main__":
     print(mon_max(2, 2024))  # Expected: 29
     print(mon_max(2, 2023))  # Expected: 28
     print(mon_max(1, 2023))  # Expected: 31
+
+def day_of_week(date: str) -> str:
+    '''
+    Returns the day of the week for a given date in YYYY-MM-DD format.
+    Returns one of: 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'
+    '''
+    day, month, year = (int(x) for x in date.split('-')[::-1])
+    days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+    offset = {1:0, 2:3, 3:2, 4:5, 5:0, 6:3, 7:5, 8:1, 9:4, 10:6, 11:2, 12:4}
+    if month < 3:
+        year -= 1
+    num = (year + year//4 - year//100 + year//400 + offset[month] + day) % 7
+    return days[num]
+
+
+def valid_date(date: str) -> bool:
+    '''
+    valid_date(date) -> True or False
+
+    Checks if a given date string in YYYY-MM-DD format is a valid calendar date.
+    Returns True if valid, False if not.
+
+    Checks performed:
+    - String must be in YYYY-MM-DD format
+    - Month must be between 1 and 12
+    - Day must be valid for the given month and year (handles leap years)
+    '''
+    # Step 4a: Make sure the format is correct using split
+    parts = date.split('-')
+
+    if len(parts) != 3:
+        return False   # must have exactly 3 parts: year, month, day
+
+    str_year, str_month, str_day = parts
+
+    # Step 4b: Make sure all parts are numeric digits only
+    if not str_year.isdigit() or not str_month.isdigit() or not str_day.isdigit():
+        return False   # non-numeric characters found
+
+    year = int(str_year)
+    month = int(str_month)
+    day = int(str_day)
+
+    # Step 4c: Check month is within valid range
+    if month < 1 or month > 12:
+        return False   # month must be 1-12
+
+    # Step 4d: Check day is within valid range for that month/year
+    if day < 1 or day > mon_max(month, year):
+        return False   # day out of range for this month
+
+    return True   # all checks passed - date is valid
+
+
+def day_count(start_date: str, end_date: str) -> int:
+    '''
+    day_count(start_date, end_date) -> int
+
+    Counts and returns the number of weekend days (Saturdays and Sundays)
+    between start_date and end_date, inclusive of both dates.
+
+    Both dates should be in YYYY-MM-DD format.
+    start_date must be earlier than or equal to end_date.
+    '''
+    weekend_count = 0          # counter for weekend days
+    current_date = start_date  # begin at the start date
+
+    # Loop from start_date up to AND including end_date
+    while current_date <= end_date:
+
+        # Get the day of week for the current date
+        day = day_of_week(current_date)
+
+        # Check if it's a Saturday or Sunday
+        if day == 'sat' or day == 'sun':
+            weekend_count += 1   # increment weekend counter
+
+        # Move to the next day using after()
+        current_date = after(current_date)
+
+    return weekend_count   # return total weekend days found
+
+if __name__ == "__main__":
+    # Quick test of valid_date
+    print(valid_date('2023-05-01'))   # should print True
+    print(valid_date('2023-13-01'))   # should print False (bad month)
+    print(valid_date('2023-02-30'))   # should print False (bad day)
+
+    # Quick test of day_count
+    print(day_count('2023-05-01', '2023-05-30'))  # should print 8
